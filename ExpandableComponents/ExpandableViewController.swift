@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ExpandableViewController.swift
 //  ExpandableComponents
 //
 //  Created by Edwin Cardenas on 9/1/25.
@@ -7,13 +7,12 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ExpandableViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
+        view.backgroundColor = .systemRed
     }
 
-
 }
-
