@@ -19,7 +19,7 @@ class ExpandableView: UIView {
         return shouldCollapse ? "Show More" : "Show Less"
     }
 
-    lazy var expandableViewComponent: ExpandableViewComponent = {
+    lazy var primaryView: ExpandableViewComponent = {
         let component = ExpandableViewComponent()
 
         component.delegate = self
@@ -27,7 +27,25 @@ class ExpandableView: UIView {
         return component
     }()
 
-    let secondView: UIView = {
+    let secondaryView: UIView = {
+        let view = UIView()
+
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemPink
+
+        return view
+    }()
+
+    let tertiaryView: UIView = {
+        let view = UIView()
+
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemGreen
+
+        return view
+    }()
+
+    let expandableView: UIView = {
         let view = UIView()
 
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -36,7 +54,7 @@ class ExpandableView: UIView {
         return view
     }()
 
-    var secondViewHeightConstraint = NSLayoutConstraint()
+    var expandableViewHeightConstraint = NSLayoutConstraint()
 
     // MARK: - Initializers
 
@@ -59,38 +77,63 @@ extension ExpandableView {
     private func setupViews() {
         translatesAutoresizingMaskIntoConstraints = false
 
-        addSubview(expandableViewComponent)
-        addSubview(secondView)
+        addSubview(primaryView)
+        addSubview(secondaryView)
+        addSubview(expandableView)
+        addSubview(tertiaryView)
 
+        // primaryView
         NSLayoutConstraint.activate([
-            expandableViewComponent.topAnchor.constraint(equalTo: topAnchor),
-            expandableViewComponent.leadingAnchor.constraint(
+            primaryView.topAnchor.constraint(
+                equalTo: topAnchor,
+            ),
+            primaryView.leadingAnchor.constraint(
                 equalTo: leadingAnchor
             ),
-            expandableViewComponent.trailingAnchor.constraint(
+            primaryView.trailingAnchor.constraint(
                 equalTo: trailingAnchor
             ),
         ])
 
-        secondViewHeightConstraint = secondView.heightAnchor.constraint(
+        // secondaryView
+        NSLayoutConstraint.activate([
+            secondaryView.topAnchor.constraint(
+                equalTo: primaryView.bottomAnchor
+            ),
+            secondaryView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            secondaryView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            secondaryView.heightAnchor.constraint(equalToConstant: 50),
+        ])
+
+        // expandableView
+        expandableViewHeightConstraint = expandableView.heightAnchor.constraint(
             equalToConstant: 0
         )
 
         NSLayoutConstraint.activate([
-            secondView.topAnchor.constraint(
-                equalTo: expandableViewComponent.bottomAnchor
+            expandableView.topAnchor.constraint(
+                equalTo: secondaryView.bottomAnchor
             ),
-            secondView.leadingAnchor.constraint(
-                equalTo: expandableViewComponent.leadingAnchor
+            expandableView.leadingAnchor.constraint(
+                equalTo: leadingAnchor
             ),
-            secondView.trailingAnchor.constraint(
-                equalTo: expandableViewComponent.trailingAnchor
+            expandableView.trailingAnchor.constraint(
+                equalTo: trailingAnchor
             ),
-            secondView.bottomAnchor.constraint(
-                equalTo: bottomAnchor
-            ),
-            secondViewHeightConstraint,
+            expandableViewHeightConstraint,
         ])
+
+        // tertiaryView
+        NSLayoutConstraint.activate([
+            tertiaryView.topAnchor.constraint(
+                equalTo: expandableView.bottomAnchor
+            ),
+            tertiaryView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            tertiaryView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            tertiaryView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            tertiaryView.heightAnchor.constraint(equalToConstant: 60),
+        ])
+
     }
 
 }
@@ -103,8 +146,8 @@ extension ExpandableView: ExpandableViewComponentDelegate {
         UIView.animate(withDuration: 0.3) {
             self.shouldCollapse.toggle()
 
-            self.expandableViewComponent.buttonTitle = self.buttonTitle
-            self.secondViewHeightConstraint.constant =
+            self.primaryView.buttonTitle = self.buttonTitle
+            self.expandableViewHeightConstraint.constant =
                 self.shouldCollapse ? 0 : 100
 
             self.delegate?.didViewDidLayoutSuperview()

@@ -11,23 +11,24 @@ class ExpandableViewController: UIViewController {
 
     // MARK: - Properties
 
-    lazy var firstView: ExpandableView = {
-        let expandableView = ExpandableView()
+    //    lazy var secondView: ExpandableView = {
+    //        let expandableView = ExpandableView()
+    //
+    //        expandableView.delegate = self
+    //
+    //        return expandableView
+    //    }()
 
-        expandableView.delegate = self
+    let firstView: UIView = {
+        let view = UIView()
 
-        return expandableView
+        view.backgroundColor = .systemTeal
+        view.heightAnchor.constraint(equalToConstant: 50).isActive = true
+
+        return view
     }()
 
-    lazy var secondView: ExpandableView = {
-        let expandableView = ExpandableView()
-
-        expandableView.delegate = self
-
-        return expandableView
-    }()
-
-    lazy var thirdView: ExpandableView = {
+    lazy var expandibleView: ExpandableView = {
         let expandableView = ExpandableView()
 
         expandableView.delegate = self
@@ -40,7 +41,6 @@ class ExpandableViewController: UIViewController {
 
         _stackView.translatesAutoresizingMaskIntoConstraints = false
         _stackView.axis = .vertical
-        _stackView.spacing = 6
 
         return _stackView
     }()
@@ -63,8 +63,7 @@ extension ExpandableViewController {
         view.backgroundColor = .systemBackground
 
         stackView.addArrangedSubview(firstView)
-        stackView.addArrangedSubview(secondView)
-        stackView.addArrangedSubview(thirdView)
+        stackView.addArrangedSubview(expandibleView)
 
         view.addSubview(stackView)
 
