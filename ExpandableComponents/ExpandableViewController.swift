@@ -11,17 +11,10 @@ class ExpandableViewController: UIViewController {
 
     // MARK: - Properties
 
-    //    lazy var secondView: ExpandableView = {
-    //        let expandableView = ExpandableView()
-    //
-    //        expandableView.delegate = self
-    //
-    //        return expandableView
-    //    }()
-
     let firstView: UIView = {
         let view = UIView()
 
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .systemTeal
         view.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
@@ -34,15 +27,6 @@ class ExpandableViewController: UIViewController {
         expandableView.delegate = self
 
         return expandableView
-    }()
-
-    let stackView: UIStackView = {
-        let _stackView = UIStackView()
-
-        _stackView.translatesAutoresizingMaskIntoConstraints = false
-        _stackView.axis = .vertical
-
-        return _stackView
     }()
 
     // MARK: - View Lifecycle
@@ -62,24 +46,28 @@ extension ExpandableViewController {
     private func setupViews() {
         view.backgroundColor = .systemBackground
 
-        stackView.addArrangedSubview(firstView)
-        stackView.addArrangedSubview(expandibleView)
-
-        view.addSubview(stackView)
+        view.addSubview(firstView)
+        view.addSubview(expandibleView)
 
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(
+            firstView.topAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.topAnchor,
                 constant: 10
             ),
-            stackView.leadingAnchor.constraint(
+            firstView.leadingAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.leadingAnchor,
                 constant: 10
             ),
-            stackView.trailingAnchor.constraint(
+            firstView.trailingAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.trailingAnchor,
                 constant: -10
             ),
+        ])
+
+        NSLayoutConstraint.activate([
+            expandibleView.topAnchor.constraint(equalTo: firstView.bottomAnchor),
+            expandibleView.leadingAnchor.constraint(equalTo: firstView.leadingAnchor),
+            expandibleView.trailingAnchor.constraint(equalTo: firstView.trailingAnchor)
         ])
     }
 
@@ -91,7 +79,7 @@ extension ExpandableViewController: ExpandableViewComponentDelegate {
 
     func didViewDidLayoutSuperview() {
         UIView.animate(withDuration: 0.5) {
-            self.stackView.layoutSubviews()
+            self.view.layoutSubviews()
         }
     }
 
